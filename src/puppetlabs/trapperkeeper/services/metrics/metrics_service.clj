@@ -2,6 +2,7 @@
   (:require [puppetlabs.trapperkeeper.core :as trapperkeeper]
             [puppetlabs.trapperkeeper.services.protocols.metrics :as metrics]
             [puppetlabs.trapperkeeper.services.metrics.metrics-core :as core]
+            [puppetlabs.trapperkeeper.services.metrics.tracing-core :as tracing]
             [puppetlabs.trapperkeeper.services.metrics.jolokia :as jolokia]
             [puppetlabs.trapperkeeper.services :as tk-services]))
 
@@ -13,12 +14,15 @@
     {:registries
      (atom {"default"
             (core/initialize (get-in-config [:metrics] {})
-                             nil)})})
+                             nil)})
+     :tracers (atom {})})
 
   (stop [this context]
-    (let [{:keys [registries] :as ctx} (tk-services/service-context this)]
+    (let [{:keys [registries tracers] :as ctx} (tk-services/service-context this)]
       (doseq [[_ metrics-reg] @registries]
         (core/stop metrics-reg))
+      (doseq [[_ tracer] @tracers]
+        (.close tracer))
       ctx))
 
   (get-metrics-registry [this]
@@ -31,6 +35,15 @@
       (core/get-or-initialize! (get-in-config [:metrics] {})
           (tk-services/service-context this)
           domain)))
+
+  (register-tracer [this service-name]
+    (-> (:tracers (tk-services/service-context this))
+        (swap! assoc service-name (tracing/create-tracer service-name))
+        (get service-name)))
+
+  (get-tracer [this service-name]
+    (-> @(:tracers (tk-services/service-context this))
+        (get service-name)))
 
   (initialize-registry-settings [this domain settings]
    (throw (RuntimeException.

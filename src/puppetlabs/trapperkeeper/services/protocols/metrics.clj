@@ -11,6 +11,14 @@
      the JMX metric. For example in `foo:name=my-metric`, `foo` is the
      `domain`.")
 
+  (register-tracer
+    [this service-name]
+    "Creates a named tracer.")
+
+  (get-tracer
+    [this service-name]
+    "Provides access to the named tracer.")
+
   (initialize-registry-settings
    [this domain settings]
    "Allows for specifying settings for a metric registry reporter that don't

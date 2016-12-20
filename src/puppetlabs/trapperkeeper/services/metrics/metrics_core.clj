@@ -1,6 +1,7 @@
 (ns puppetlabs.trapperkeeper.services.metrics.metrics-core
   (:import (com.codahale.metrics JmxReporter MetricRegistry)
-           (com.fasterxml.jackson.core JsonParseException))
+           (com.fasterxml.jackson.core JsonParseException)
+           (io.opentracing Tracer))
   (:require [clojure.tools.logging :as log]
             [clojure.java.io :as io]
             [cheshire.core :as json]
@@ -42,7 +43,8 @@
    :jmx-reporter (schema/maybe JmxReporter)})
 
 (def MetricsServiceContext
-  {:registries (schema/atom {schema/Any RegistryContext})})
+  {:registries (schema/atom {schema/Any RegistryContext})
+   (schema/optional-key :tracers) (schema/atom {schema/Any Tracer})})
 
 (def Keyword-or-Str (schema/if keyword? schema/Keyword schema/Str))
 

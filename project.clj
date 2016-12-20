@@ -31,6 +31,8 @@
                  [org.clojure/tools.logging]
                  [io.dropwizard.metrics/metrics-core "3.1.2"]
                  [org.jolokia/jolokia-core "1.3.5"]
+                 [com.uber.jaeger/jaeger-zipkin "0.17.0"]
+                 [com.uber.jaeger/jaeger-core "0.17.0"]
                  [puppetlabs/comidi]
                  [puppetlabs/i18n]]
 
