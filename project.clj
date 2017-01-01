@@ -33,6 +33,7 @@
                  [org.jolokia/jolokia-core "1.3.5"]
                  [com.uber.jaeger/jaeger-zipkin "0.17.0"]
                  [com.uber.jaeger/jaeger-core "0.17.0"]
+                 [com.uber.jaeger/jaeger-context "0.17.0"]
                  [puppetlabs/comidi]
                  [puppetlabs/i18n]]
 

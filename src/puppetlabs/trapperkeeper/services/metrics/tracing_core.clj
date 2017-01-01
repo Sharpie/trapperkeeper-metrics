@@ -4,12 +4,16 @@
             [schema.core :as schema])
   (:import
     [com.uber.jaeger Tracer$Builder]
+    [com.uber.jaeger.context TracingUtils]
     [com.uber.jaeger.samplers ConstSampler]
     [com.uber.jaeger.reporters LoggingReporter RemoteReporter]
     [com.uber.jaeger.metrics InMemoryStatsReporter Metrics StatsFactoryImpl]
     [io.opentracing.propagation Format$Builtin]
     [com.uber.jaeger.propagation.b3 B3TextMapCodec]
     [com.uber.jaeger.senders.zipkin ZipkinSender]))
+
+(def trace-context
+  (TracingUtils/getTraceContext))
 
 (defn create-logger
   []
@@ -30,3 +34,15 @@
                        (ConstSampler. true))
       (.registerExtractor Format$Builtin/TEXT_MAP (new B3TextMapCodec))
       .build))
+
+(defn push-span
+  [span]
+  (.push trace-context span))
+
+(defn pop-span
+  []
+  (.pop trace-context))
+
+(defn get-current-span
+  []
+  (.getCurrentSpan trace-context))
