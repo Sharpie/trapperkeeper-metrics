@@ -6,7 +6,7 @@
 
   :min-lein-version "2.7.1"
 
-  :parent-project {:coords [puppetlabs/clj-parent "1.5.1"]
+  :parent-project {:coords [puppetlabs/clj-parent "1.7.38"]
                    :inherit [:managed-dependencies]}
 
   :pedantic? :abort
